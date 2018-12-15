@@ -1,0 +1,216 @@
+include "target.tmh" //here we link this file to the file that contains function code
+// include "TM_Programing_Macro.ttm"
+
+
+int Flash ;
+int main()
+
+{
+
+// Exclude these devices for this script
+//Configure(&LMFD,MODE_EXCLUDED); 
+//Configure(&RMFD,MODE_EXCLUDED);
+//Configure(&HCougar,MODE_EXCLUDED);
+//Configure(&T16000,MODE_EXCLUDED);
+//Configure(&T16000L,MODE_EXCLUDED);
+//Configure(&TFRPRudder,MODE_EXCLUDED);
+
+if(Init(&EventHandle)) return 1; // declare the event handler, return on error
+
+// Print credits /////////////////////////////////////////////////
+printf(" \xa");
+printf("ELITE DANGEROUS - V1.1a\xa");
+printf("TM-Warthog script created by Jaysun'SUNDEVIL'Spinks.\xa");
+//////////////////////////////////////////////////////////////////
+
+
+//script and functions go here
+
+ActKey(PULSE+KEYON+LED(&Throttle, LED_INTENSITY, 43));  // Throttle backlight to low intensity
+ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED1)); //set LED 1 OFF
+ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED2)); //set LED 2 OFF
+ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED3)); //set LED 3 OFF
+ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED4)); //set LED 4 OFF
+ActKey(PULSE+KEYON+LED(&Throttle, LED_ONOFF, LED_CURRENT-LED5)); //set LED 5 OFF
+
+
+SetKBRate(50, 100); // Pulse and delay settings
+SetShiftButton(&Joystick, S4, &Throttle, BSF, BSB);  // Set IN/OUT & Up/Middle/Down Buttons 
+
+// Set Axis to DX 
+MapAxis(&Joystick, JOYX, DX_X_AXIS);
+SetSCurve(&Joystick, JOYX, 0, 1, 0, 0, 5);
+MapAxis(&Joystick, JOYY, DX_Y_AXIS);
+SetSCurve(&Joystick, JOYY, 0, 1, 0, 0, 2);
+MapAxis(&Throttle, THR_LEFT, DX_ZROT_AXIS);
+MapAxis(&Throttle, THR_RIGHT, DX_Z_AXIS);
+MapAxis(&Throttle, THR_FC, DX_SLIDER_AXIS);
+MapAxis(&Throttle, SCX, DX_XROT_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
+SetSCurve(&Throttle, SCX, 0, 0, 0, 0, 0);
+MapAxis(&Throttle, SCY, DX_YROT_AXIS, AXIS_NORMAL, MAP_ABSOLUTE);
+SetSCurve(&Throttle, SCY, 0, 0, 0, 0, 0);
+
+
+
+
+////////////////////////////
+//Joystick buttons and hat//
+////////////////////////////
+
+
+// Joystick Trigers
+MapKey(&Joystick, TG1, MOUSE_LEFT); // --- Primary_weapon_fire 
+MapKey(&Joystick, TG2, 0); //          --- Not_used
+
+
+// Joystick Buttons
+MapKey(&Joystick, S1,'n'); //          --- Cycle_weapons
+MapKey(&Joystick, S2, MOUSE_RIGHT); // --- Secondary_fire
+MapKey(&Joystick, S3, USB[0x33]); //   --- Flight_assit_ON/OFF
+MapKey(&Joystick, S4, 0); //           --- Mode_switch
+
+
+// Joystick Coolie|TMS|DMS|CMS
+MapKey(&Joystick, H1U, USB[0x3F]); // Coolie hat up      --- Center_TrackIR
+MapKeyIO(&Joystick, H1R, 'e', 0); // Coolie hat right    --- Menu_right
+MapKey(&Joystick, H1D, MOUSE_CENTER); // Coolie hat down --- Pause_TrackIR
+MapKeyIO(&Joystick, H1L, 'q', 0); // Coolie hat left     --- Menu_left
+     
+MapKeyIO(&Joystick, H2U, PULSE+USB[0x52], CHAIN(PULSE+L_SHIFT+USB[0x5B], D(100), PULSE+USB[0x52], D(100), PULSE+USB[0x52], D(100), PULSE+USB[0x52])); // TMS up  	  --- Pips_to_engine
+MapKeyIO(&Joystick, H2R, PULSE+USB[0x4F], CHAIN(PULSE+L_SHIFT+USB[0x5B], D(100), PULSE+USB[0x4F], D(100), PULSE+USB[0x4F], D(100), PULSE+USB[0x4F])); // TMS right    --- Pips_to_Weapons
+MapKeyIO(&Joystick, H2L, PULSE+USB[0x50], CHAIN(PULSE+L_SHIFT+USB[0x5B], D(100), PULSE+USB[0x50], D(100), PULSE+USB[0x50], D(100), PULSE+USB[0x50])); // TMS left     --- pips_to_sytems
+MapKey(&Joystick, H2D, PULSE+L_SHIFT+USB[0x5B]); // TMS down   --- Reset_power
+
+MapKeyIO(&Joystick, H3U, L_SHIFT+'w', '2'); // DMS up                      			   --- Up_menu
+MapKeyIO(&Joystick, H3R, L_SHIFT+'d', '4'); // DMS right                               --- Right_menu
+MapKeyIO(&Joystick, H3D, TEMPO(L_SHIFT+'s', L_SHIFT+USB[0x2C], 180), '3'); // DMS down --- Down_menu
+MapKeyIO(&Joystick, H3L, L_SHIFT+'a', '1'); // DMS left								   --- Left_menu
+
+MapKeyIO(&Joystick, H4U, 0, PULSE+USB[0x5D]); // CMS up   						  --- Target_in_Front
+MapKeyIO(&Joystick, H4R, USB[0x30], PULSE+USB[0x0A]); // CMS right 				  --- Next Subsystem,Next target, 'W'
+MapKeyIO(&Joystick, H4D, 0,PULSE+L_SHIFT+USB[0x17]); // CMS down   				  --- Wingmans_target
+MapKeyIO(&Joystick, H4L, USB[0x2F],PULSE+L_SHIFT+USB[0x0A]); // CMS left 		  --- Previous Subsystem,Previous Target, 'S'
+MapKeyIO(&Joystick, H4P, L_SHIFT+USB[0x38],PULSE+L_SHIFT+USB[0x0B]); // CMS push  --- Next System in Route,Select Highest Threat
+
+/////////////////////////////////
+//Throttle buttons and switches//
+/////////////////////////////////
+
+
+Flash = CHAIN(PULSE+LED(&Throttle,LED_ONOFF,LED_CURRENT^LED0),PULSE+L_CTL+USB[0x08]); //Chain needed for the ejection sequence on button "LTB"
+
+
+// Thumb Hat
+MapKey(&Throttle,MSU, USB[0x15]); //usb code 'R'   --- Vector_thrust_up
+MapKey(&Throttle,MSR, USB[0x08]); //usb code 'E'   --- Vector_thrust_right
+MapKey(&Throttle,MSD, USB[0x09]); //usb code 'F'   --- Vector_thrust_down
+MapKey(&Throttle,MSL, USB[0x14]); //usb code 'Q'   --- Vector_thrust_left
+MapKey(&Throttle,MSP, USB[0x2B]); //usb code 'TAB' --- Boost
+
+
+// Index Finger Button
+MapKey(&Throttle,CSU, 0); //          --- Not_used 
+MapKey(&Throttle,CSR, USB[0x07]); //  --- Yaw_right
+MapKey(&Throttle,CSD, 0); //          --- Not_used
+MapKey(&Throttle,CSL, USB[0x04]); //  --- Yaw_left
+
+MapKey(&Throttle,SC, USB[0x2B]); // Boost
+
+//speedbrake
+MapKey(&Throttle,SPDB, USB[0x62]); // --- Chaff_launch
+MapKey(&Throttle,SPDM, 0); //         --- Not_used
+MapKey(&Throttle,SPDF, 0); // 		  --- Not_used
+
+
+//Boat Switch -- Boat switch Activates LED 1 and 2 for mode switching
+MapKey(&Throttle, BSF, CHAIN(PULSE+USB[0x18],PULSE+'c', REXEC(0, 200, "ActKey(KEYON+LED(&Throttle,LED_ONOFF,LED_CURRENT^LED1));")));
+MapKeyR(&Throttle, BSF, CHAIN(PULSE+USB[0x18], 'c', LED(&Throttle,LED_ONOFF, LED_CURRENT-LED1)));
+// MapKey(&Throttle, BSM, PULSE+'c');
+MapKey(&Throttle, BSB, CHAIN(PULSE+L_SHIFT+USB[0x34], LED(&Throttle,LED_ONOFF, LED_CURRENT+LED2)));
+MapKeyR(&Throttle, BSB, CHAIN(PULSE+USB[0x2C], LED(&Throttle,LED_ONOFF, LED_CURRENT-LED2)));
+
+
+//China Hat
+MapKey(&Throttle, CHB, R_SHIFT+USB[0x2E]); // --- Heat_sink
+MapKey(&Throttle, CHF, USB[0x34]); //         --- Shield_cell_bank
+
+
+//Pinkie
+MapKey(&Throttle, PSF, PULSE+USB[0x49]); //   --- Ship_lights
+MapKeyR(&Throttle, PSF, PULSE+USB[0x49]); //  --- Ship_lights
+MapKey(&Throttle, PSB, PULSE+R_SHIFT+'n'); // Night_Vision On
+MapKeyR(&Throttle, PSB, PULSE+R_SHIFT+'n'); // Night_Vision Off
+
+//Left ap button
+MapKeyIO(&Throttle, LTB, L_SHIFT+USB[0x0D],R_SHIFT+USB[0x0D]); // --- FSD_jump/Supercruise
+
+//////////////////////////////////////
+//Throttle_base_switches_and_buttons//
+//////////////////////////////////////
+
+
+// Engine Flow
+MapKey(&Throttle, EFLNORM, CHAIN( PULSE+'c', LED(&Throttle,LED_ONOFF, LED_CURRENT+LED5))); // ??????????????
+MapKeyR(&Throttle, EFLNORM, CHAIN( PULSE+'c', LED(&Throttle,LED_ONOFF, LED_CURRENT-LED5))); // ??????????????
+MapKey(&Throttle, EFRNORM, CHAIN( PULSE+USB[0x4C], LED(&Throttle,LED_ONOFF, LED_CURRENT+LED5))); // ??????????????
+MapKeyR(&Throttle, EFRNORM, CHAIN( PULSE+USB[0x4C], LED(&Throttle,LED_ONOFF, LED_CURRENT-LED5))); // ??????????????
+
+
+// Engine Operation - NOT_YET_USED
+MapKey(&Throttle, EOLIGN, 0); // 	--- Not_used 
+MapKey(&Throttle, EOLMOTOR, 0); //  --- Not_used 
+MapKeyR(&Throttle, EOLMOTOR, 0); // --- Not_used 
+MapKey(&Throttle, EORIGN, 0); //    --- Not_used 
+MapKey(&Throttle, EORMOTOR, 0); //  --- Not_used 
+MapKeyR(&Throttle, EORMOTOR, 0); // --- Not_used 
+
+
+// APU Start
+MapKey(&Throttle, APUON, PULSE+L_SHIFT+'o'); // --- Toggle_obital_lines
+MapKey(&Throttle, APUOFF,PULSE+L_SHIFT+'o'); // --- Toggle_obital_lines
+
+
+// Warn Silence
+MapKey(&Throttle,LDGH, R_SHIFT+'m');  // --- Center_mouse
+
+
+// Flaps
+MapKey(&Throttle,FLAPU, PULSE+L_CTL+'w'); // --- Throttle_to_75%
+MapKey(&Throttle,FLAPD, PULSE+L_CTL+'s'); // --- Throttle_to_0%
+
+
+// EAC
+MapKeyIO(&Throttle,EACON,0,PULSE+L_SHIFT+USB[0x4A]); // FLAPS LANDING usb code 'f' ????????
+MapKeyIO(&Throttle,EACOFF,0,PULSE+L_CTL+USB[0x4A]); // FLAPS UP usb code 'f'  ?????????????
+
+
+// Radar ALTM
+MapKey(&Throttle,RDRNRM,PULSE+L_SHIFT+USB[0x0F]); // Gear_Down
+MapKey(&Throttle,RDRDIS,PULSE+L_SHIFT+USB[0x0F]); // Gear_Up
+
+
+// AP Engage/Disengage
+MapKey(&Throttle,APENG,0); // --- Deploy_heatsink  -- PULSE+PULSE+R_SHIFT+USB[0x2E]
+MapKey(&Throttle,APPAT, PULSE+L_SHIFT+'k'); // Galaxy_Map_On 
+MapKeyR(&Throttle,APPAT, PULSE+L_SHIFT+'k'); // Galaxy_Map_Off
+MapKey(&Throttle,APAH, 0); // Not_Used
+MapKey(&Throttle,APALT, PULSE+L_SHIFT+'m'); // System_Map_On 
+MapKeyR(&Throttle,APALT, PULSE+L_SHIFT+'m'); // System_Map_Off
+
+// Throttle at zero detent
+MapKey(&Throttle,IDLELON,LED(&Throttle,LED_ONOFF,LED_CURRENT-LED0)); //Idle->off BACKLIGHT OFF
+MapKey(&Throttle,IDLELOFF,LED(&Throttle,LED_ONOFF,LED_CURRENT+LED0)); //off->Idle BACKLIGHT ON
+MapKey(&Throttle,IDLERON,LED(&Throttle,LED_ONOFF,LED_CURRENT-LED0)); //Idle->off BACKLIGHT OFF
+MapKey(&Throttle,IDLEROFF,LED(&Throttle,LED_ONOFF,LED_CURRENT+LED0)); //off->Idle BACKLIGHT ON
+
+
+
+}
+
+
+int EventHandle(int type, alias o, int x)
+{
+DefaultMapping(&o, x);
+}
+
+
