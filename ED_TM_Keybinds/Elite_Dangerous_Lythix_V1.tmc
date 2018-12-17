@@ -21,6 +21,7 @@ if(Init(&EventHandle)) return 1; // declare the event handler, return on error
 printf(" \xa");
 printf("ELITE DANGEROUS - V1.1a\xa");
 printf("TM-Warthog script created by Jaysun'SUNDEVIL'Spinks.\xa");
+printf("TM-Warthog script customised to suite Stephen 'Lythix' Price.\xa");
 //////////////////////////////////////////////////////////////////
 
 
@@ -71,15 +72,19 @@ MapKey(&Joystick, S4, 0); //           --- Mode_switch
 
 
 // Joystick Coolie|TMS|DMS|CMS
-MapKey(&Joystick, H1U, USB[0x3F]); // Coolie hat up      --- Center_TrackIR
-MapKeyIO(&Joystick, H1R, 'e', 0); // Coolie hat right    --- Menu_right
-MapKey(&Joystick, H1D, MOUSE_CENTER); // Coolie hat down --- Pause_TrackIR
-MapKeyIO(&Joystick, H1L, 'q', 0); // Coolie hat left     --- Menu_left
+//MapKey(&Joystick, H1U, USB[0x3F]); // Coolie hat up      --- Center_TrackIR
+MapKeyIO(&Joystick, H1U, USB[0x20], L_SHIFT+'w'); // Coolie hat up   22   --- Menu Arrow Up
+//MapKeyIO(&Joystick, H1R, 'd', 0); // Coolie hat right    --- Menu_right
+MapKey(&Joystick, H1R, 'd', 0); // Coolie hat right    --- Menu_right
+//MapKey(&Joystick, H1D, MOUSE_CENTER); // Coolie hat down --- Pause_TrackIR
+MapKey(&Joystick, H1D, L_SHIFT+'s'); // Coolie hat down --- Menu Arrow Down
+MapKey(&Joystick, H1L, 'a', 0); // Coolie hat down --- Menu Arrow Left
+// MapKeyIO(&Joystick, H1L, 'a', 0); // Coolie hat left     --- Menu_left
      
 MapKeyIO(&Joystick, H2U, PULSE+USB[0x52], CHAIN(PULSE+L_SHIFT+USB[0x5B], D(100), PULSE+USB[0x52], D(100), PULSE+USB[0x52], D(100), PULSE+USB[0x52])); // TMS up  	  --- Pips_to_engine
 MapKeyIO(&Joystick, H2R, PULSE+USB[0x4F], CHAIN(PULSE+L_SHIFT+USB[0x5B], D(100), PULSE+USB[0x4F], D(100), PULSE+USB[0x4F], D(100), PULSE+USB[0x4F])); // TMS right    --- Pips_to_Weapons
 MapKeyIO(&Joystick, H2L, PULSE+USB[0x50], CHAIN(PULSE+L_SHIFT+USB[0x5B], D(100), PULSE+USB[0x50], D(100), PULSE+USB[0x50], D(100), PULSE+USB[0x50])); // TMS left     --- pips_to_sytems
-MapKey(&Joystick, H2D, PULSE+L_SHIFT+USB[0x5B]); // TMS down   --- Reset_power
+MapKeyIO(&Joystick, H2D, PULSE+L_SHIFT+USB[0x5B], L_SHIFT+USB[0x2C]); // In + TMS down   --- Reset_power  // Out + TMS down --- Select menu item (shift space)
 
 MapKeyIO(&Joystick, H3U, L_SHIFT+'w', '2'); // DMS up                      			   --- Up_menu
 MapKeyIO(&Joystick, H3R, L_SHIFT+'d', '4'); // DMS right                               --- Right_menu
@@ -212,5 +217,4 @@ int EventHandle(int type, alias o, int x)
 {
 DefaultMapping(&o, x);
 }
-
 
