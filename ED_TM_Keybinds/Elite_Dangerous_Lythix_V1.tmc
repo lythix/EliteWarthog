@@ -75,10 +75,10 @@ MapKey(&Joystick, S4, 0); //           --- Mode_switch
 //MapKey(&Joystick, H1U, USB[0x3F]); // Coolie hat up      --- Center_TrackIR
 MapKeyIO(&Joystick, H1U, USB[0x20], L_SHIFT+'w'); // Coolie hat up   22   --- Menu Arrow Up
 //MapKeyIO(&Joystick, H1R, 'd', 0); // Coolie hat right    --- Menu_right
-MapKey(&Joystick, H1R, 'd', 0); // Coolie hat right    --- Menu_right
+MapKey(&Joystick, H1R, L_SHIFT+'d', 0); // Coolie hat right    --- Menu_right
 //MapKey(&Joystick, H1D, MOUSE_CENTER); // Coolie hat down --- Pause_TrackIR
 MapKey(&Joystick, H1D, L_SHIFT+'s'); // Coolie hat down --- Menu Arrow Down
-MapKey(&Joystick, H1L, 'a', 0); // Coolie hat down --- Menu Arrow Left
+MapKey(&Joystick, H1L, L_SHIFT+'a', 0); // Coolie hat down --- Menu Arrow Left
 // MapKeyIO(&Joystick, H1L, 'a', 0); // Coolie hat left     --- Menu_left
      
 MapKeyIO(&Joystick, H2U, PULSE+USB[0x52], CHAIN(PULSE+L_SHIFT+USB[0x5B], D(100), PULSE+USB[0x52], D(100), PULSE+USB[0x52], D(100), PULSE+USB[0x52])); // TMS up  	  --- Pips_to_engine
