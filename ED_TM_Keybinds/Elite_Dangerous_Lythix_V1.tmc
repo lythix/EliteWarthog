@@ -93,7 +93,7 @@ MapKeyIO(&Joystick, H3L, L_SHIFT+'a', '1'); // DMS left								   --- Left_menu
 
 MapKeyIO(&Joystick, H4U, 0, PULSE+USB[0x5D]); // CMS up   						  --- Target_in_Front
 MapKeyIO(&Joystick, H4R, USB[0x30], PULSE+USB[0x0A]); // CMS right 				  --- Next Subsystem,Next target, 'W'
-MapKeyIO(&Joystick, H4D, 0,PULSE+L_SHIFT+USB[0x17]); // CMS down   				  --- Wingmans_target
+MapKeyIO(&Joystick, H4D, L_SHIFT+PULSE+USB[0x5D],PULSE+L_SHIFT+USB[0x17]); // CMS down   				  --- Wingmans_target
 MapKeyIO(&Joystick, H4L, USB[0x2F],PULSE+L_SHIFT+USB[0x0A]); // CMS left 		  --- Previous Subsystem,Previous Target, 'S'
 MapKeyIO(&Joystick, H4P, L_SHIFT+USB[0x38],PULSE+L_SHIFT+USB[0x0B]); // CMS push  --- Next System in Route,Select Highest Threat
 
@@ -208,6 +208,9 @@ MapKey(&Throttle,IDLELOFF,LED(&Throttle,LED_ONOFF,LED_CURRENT+LED0)); //off->Idl
 MapKey(&Throttle,IDLERON,LED(&Throttle,LED_ONOFF,LED_CURRENT-LED0)); //Idle->off BACKLIGHT OFF
 MapKey(&Throttle,IDLEROFF,LED(&Throttle,LED_ONOFF,LED_CURRENT+LED0)); //off->Idle BACKLIGHT ON
 
+// Hold Fire On
+MapKey(&Throttle, EORMOTOR, MOUSE_LEFT); //  --- Not_used 
+MapKeyR(&Throttle, EORMOTOR, MOUSE_LEFT); // --- Not_used
 
 
 }
