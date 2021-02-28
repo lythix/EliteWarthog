@@ -489,7 +489,6 @@
 	</ChargeECM>
 	<EnableRumbleTrigger Value="1" />
 	<EnableMenuGroups Value="0" />
-	<MouseGUI Value="0" />
 	<WeaponColourToggle>
 		<Primary Device="{NoDevice}" Key="" />
 		<Secondary Device="{NoDevice}" Key="" />
@@ -839,7 +838,7 @@
 	</BuggyCycleFireGroupPrevious>
 	<SelectTarget_Buggy>
 		<Primary Device="Keyboard" Key="Key_Numpad_5" />
-		<Secondary Device="07381718" Key="Joy_6">
+		<Secondary Device="{NoDevice}" Key="">
 			<Modifier Device="Keyboard" Key="Key_5" />
 		</Secondary>
 	</SelectTarget_Buggy>
